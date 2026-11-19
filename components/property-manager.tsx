@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
 import { ArrowLeft, ArrowUpRight, CheckCircle2, ImagePlus, LogOut, Pencil, Plus, Save, Sparkles, Trash2, X } from 'lucide-react';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { getSupabaseClient, isSupabaseConfigured } from '@/lib/supabase/client';
 
 type PropertyImage = {
   id: string;
@@ -29,7 +29,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
 function publicImageUrl(path: string): string {
-  return supabase.storage.from('property-images').getPublicUrl(path).data.publicUrl;
+  return getSupabaseClient().storage.from('property-images').getPublicUrl(path).data.publicUrl;
 }
 
 export default function PropertyManager() {
@@ -44,7 +44,7 @@ export default function PropertyManager() {
   const [error, setError] = useState('');
 
   const loadProperties = useCallback(async (userId: string) => {
-    const { data, error: queryError } = await supabase
+    const { data, error: queryError } = await getSupabaseClient()
       .from('properties')
       .select('id, name, description, property_images(id, storage_path, alt_text)')
       .eq('owner_id', userId)
@@ -58,15 +58,20 @@ export default function PropertyManager() {
   }, []);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
     let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
+    getSupabaseClient().auth.getSession().then(({ data }) => {
       if (!mounted) return;
       setSession(data.session);
       setLoading(false);
       if (data.session) void loadProperties(data.session.user.id);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    const { data: listener } = getSupabaseClient().auth.onAuthStateChange((_event, nextSession) => {
       if (!mounted) return;
       setSession(nextSession);
       if (nextSession) void loadProperties(nextSession.user.id);
@@ -105,9 +110,9 @@ export default function PropertyManager() {
     for (const file of files) {
       const extension = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
       const path = `${session.user.id}/${propertyId}/${crypto.randomUUID()}.${extension}`;
-      const { error: uploadError } = await supabase.storage.from('property-images').upload(path, file, { contentType: file.type, upsert: false });
+      const { error: uploadError } = await getSupabaseClient().storage.from('property-images').upload(path, file, { contentType: file.type, upsert: false });
       if (uploadError) {
-        if (uploadedPaths.length > 0) await supabase.storage.from('property-images').remove(uploadedPaths);
+        if (uploadedPaths.length > 0) await getSupabaseClient().storage.from('property-images').remove(uploadedPaths);
         setError('One or more images could not be uploaded. Please try again.');
         return false;
       }
@@ -115,9 +120,9 @@ export default function PropertyManager() {
     }
 
     const imageRows = uploadedPaths.map((storagePath) => ({ property_id: propertyId, storage_path: storagePath, alt_text: form.name }));
-    const { error: insertError } = await supabase.from('property_images').insert(imageRows);
+    const { error: insertError } = await getSupabaseClient().from('property_images').insert(imageRows);
     if (insertError) {
-      await supabase.storage.from('property-images').remove(uploadedPaths);
+      await getSupabaseClient().storage.from('property-images').remove(uploadedPaths);
       setError('The images could not be saved. Please try again.');
       return false;
     }
@@ -132,7 +137,7 @@ export default function PropertyManager() {
     setNotice('');
 
     if (editingId) {
-      const { error: updateError } = await supabase.from('properties').update({ name: form.name.trim(), description: form.description.trim() }).eq('id', editingId).eq('owner_id', session.user.id);
+      const { error: updateError } = await getSupabaseClient().from('properties').update({ name: form.name.trim(), description: form.description.trim() }).eq('id', editingId).eq('owner_id', session.user.id);
       if (updateError) {
         setError('Your property details could not be saved. Please try again.');
         setBusy(false);
@@ -150,7 +155,7 @@ export default function PropertyManager() {
       return;
     }
 
-    const { data: property, error: createError } = await supabase.from('properties').insert({ name: form.name.trim(), description: form.description.trim() }).select('id').maybeSingle();
+    const { data: property, error: createError } = await getSupabaseClient().from('properties').insert({ name: form.name.trim(), description: form.description.trim() }).select('id').maybeSingle();
     if (createError || !property) {
       setError('Your property could not be created. Please try again.');
       setBusy(false);
@@ -179,20 +184,21 @@ export default function PropertyManager() {
   async function removeImage(image: PropertyImage): Promise<void> {
     if (!session) return;
     setError('');
-    const { error: deleteRowError } = await supabase.from('property_images').delete().eq('id', image.id).eq('owner_id', session.user.id);
+    const { error: deleteRowError } = await getSupabaseClient().from('property_images').delete().eq('id', image.id).eq('owner_id', session.user.id);
     if (deleteRowError) {
       setError('This image could not be removed. Please try again.');
       return;
     }
-    await supabase.storage.from('property-images').remove([image.storage_path]);
+    await getSupabaseClient().storage.from('property-images').remove([image.storage_path]);
     setProperties((current) => current.map((property) => ({ ...property, property_images: property.property_images.filter((item) => item.id !== image.id) })));
   }
 
   async function signOut(): Promise<void> {
-    await supabase.auth.signOut();
+    await getSupabaseClient().auth.signOut();
     window.location.assign('/');
   }
 
+  if (!isSupabaseConfigured) return <main className="grid min-h-screen place-items-center bg-cream-50 px-6 text-center"><div><Sparkles className="mx-auto text-gold-600" /><h1 className="mt-5 font-display text-4xl text-forest-950">Owner workspace unavailable</h1><p className="mt-3 max-w-md text-sm leading-6 text-ink-500">Configure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to enable owner sign-in and property management.</p><Link href="/" className="mt-7 inline-flex items-center gap-2 rounded-full bg-forest-950 px-6 py-3 text-sm font-bold text-white">Back to website <ArrowUpRight size={16} /></Link></div></main>;
   if (loading) return <main className="grid min-h-screen place-items-center bg-cream-50 text-sm text-ink-500">Loading your workspace…</main>;
   if (!session) return <main className="grid min-h-screen place-items-center bg-cream-50 px-6 text-center"><div><Sparkles className="mx-auto text-gold-600" /><h1 className="mt-5 font-display text-4xl text-forest-950">Owner access required</h1><p className="mt-3 text-sm text-ink-500">Sign in to manage properties and photos.</p><Link href="/login" className="mt-7 inline-flex items-center gap-2 rounded-full bg-forest-950 px-6 py-3 text-sm font-bold text-white">Go to sign in <ArrowUpRight size={16} /></Link></div></main>;
 
