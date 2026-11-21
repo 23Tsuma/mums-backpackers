@@ -1,6 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import PublicProperties from '@/components/public-properties';
+import HeroSlideshow from '@/components/hero-slideshow';
+import { SITE_URL } from '@/lib/site-url';
 import {
   ArrowUpRight,
   BedDouble,
@@ -13,30 +16,31 @@ import {
   Wifi,
 } from 'lucide-react';
 
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+  openGraph: { url: '/' },
+};
+
 const photos = [
   {
-    src: '/images/WhatsApp_Image_2026-11-19_at_10.17.01_(1).jpeg',
-    alt: 'Mums Backpackers exterior surrounded by tropical greenery',
-    label: 'A welcoming home',
-    className: 'md:col-span-2 md:row-span-2',
+    src: '/images/gallery-lounge.jpg',
+    alt: 'Comfortably furnished lounge with sofas and a bright sitting area',
+    label: 'Settle in and feel at home',
   },
   {
-    src: '/images/WhatsApp_Image_2026-11-19_at_10.16.58.jpeg',
-    alt: 'Bright shared kitchen at Mums Backpackers',
-    label: 'Make yourself at home',
-    className: '',
-  },
-  {
-    src: '/images/WhatsApp_Image_2026-11-19_at_10.17.00.jpeg',
-    alt: 'Comfortable bedroom with a handcrafted bed',
+    src: '/images/gallery-bedroom.jpg',
+    alt: 'A neatly made bed in a furnished bedroom',
     label: 'Rest easy',
-    className: '',
   },
   {
-    src: '/images/WhatsApp_Image_2026-11-19_at_10.16.56_(1).jpeg',
-    alt: 'Clean private bathroom with shower',
-    label: 'Simple comforts',
-    className: 'md:col-span-2',
+    src: '/images/gallery-kitchen.jpg',
+    alt: 'Furnished kitchen with dishes and counter space',
+    label: 'Everyday comforts',
+  },
+  {
+    src: '/images/gallery-terrace.jpg',
+    alt: 'Outdoor terrace with furnished seating',
+    label: 'A quiet moment outdoors',
   },
 ];
 
@@ -51,14 +55,26 @@ export default function Home() {
   return (
     <main>
       <section className="relative min-h-[720px] overflow-hidden bg-forest-950 text-white">
-        <Image
-          src="/images/WhatsApp_Image_2026-11-19_at_10.17.01_(1).jpeg"
-          alt="The exterior of Mums Backpackers"
-          fill
-          priority
-          className="object-cover object-center opacity-60"
-        />
+        <HeroSlideshow />
         <div className="absolute inset-0 bg-gradient-to-r from-forest-950 via-forest-950/70 to-forest-950/20" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'LodgingBusiness',
+              name: 'Mums Backpackers',
+              url: SITE_URL.toString(),
+              image: [
+                new URL('/images/gallery-lounge.jpg', SITE_URL).toString(),
+                new URL('/images/mums-backpackers-exterior.jpg', SITE_URL).toString(),
+              ],
+              description: 'Comfortable, furnished accommodation with welcoming shared spaces.',
+              email: 'info@mumsbackpackers.com',
+              telephone: '+25427863245',
+            }).replace(/</g, '\\u003c'),
+          }}
+        />
         <div className="relative mx-auto flex min-h-[720px] max-w-7xl flex-col px-6 lg:px-10">
           <header className="flex items-center justify-between border-b border-white/20 py-6">
             <Link href="/" className="group flex items-center gap-3" aria-label="Mums Backpackers home">
@@ -108,10 +124,10 @@ export default function Home() {
       <PublicProperties />
 
       <section className="bg-forest-950 px-6 py-24 text-white lg:px-10 lg:py-32">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:items-center"><div><p className="eyebrow text-gold-200">A place to land</p><h2 className="section-title mt-5 text-white">Room to rest.<br /><span className="text-gold-200">Space to breathe.</span></h2><p className="mt-7 max-w-sm leading-7 text-white/65">Our rooms and shared spaces are simple, bright, and prepared with the little things that make a place feel right.</p><Link href="/booking" className="mt-9 inline-flex items-center gap-2 text-sm font-bold text-gold-200 underline decoration-gold-200/40 underline-offset-8 transition-colors hover:text-white">Ask about your stay <ArrowUpRight size={16} /></Link></div><div className="grid gap-5 sm:grid-cols-2"><div className="overflow-hidden rounded-2xl sm:translate-y-8"><Image src={photos[2].src} alt={photos[2].alt} width={650} height={760} className="h-[340px] w-full object-cover transition-transform duration-700 hover:scale-105 sm:h-[430px]" /></div><div className="overflow-hidden rounded-2xl"><Image src={photos[1].src} alt={photos[1].alt} width={650} height={760} className="h-[340px] w-full object-cover transition-transform duration-700 hover:scale-105 sm:h-[430px]" /></div></div></div>
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:items-center"><div><p className="eyebrow text-gold-200">A place to land</p><h2 className="section-title mt-5 text-white">Room to rest.<br /><span className="text-gold-200">Space to breathe.</span></h2><p className="mt-7 max-w-sm leading-7 text-white/65">Our furnished rooms and shared spaces are prepared with the little things that make a place feel right.</p><Link href="/booking" className="mt-9 inline-flex items-center gap-2 text-sm font-bold text-gold-200 underline decoration-gold-200/40 underline-offset-8 transition-colors hover:text-white">Ask about your stay <ArrowUpRight size={16} /></Link></div><div className="grid gap-5 sm:grid-cols-2"><div className="relative aspect-[4/5] overflow-hidden rounded-2xl sm:translate-y-8"><Image src={photos[1].src} alt={photos[1].alt} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition-transform duration-700 hover:scale-105" /></div><div className="relative aspect-[4/5] overflow-hidden rounded-2xl"><Image src={photos[0].src} alt={photos[0].alt} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition-transform duration-700 hover:scale-105" /></div></div></div>
       </section>
 
-      <section className="bg-cream-50 px-6 py-24 lg:px-10"><div className="mx-auto max-w-7xl"><div className="mb-10 flex items-end justify-between"><div><p className="eyebrow">A glimpse inside</p><h2 className="section-title mt-4">The little details<br /><span className="text-forest-700">matter.</span></h2></div><span className="hidden text-sm text-ink-400 sm:block">01 — 04</span></div><div className="grid auto-rows-[220px] gap-4 sm:auto-rows-[260px] md:grid-cols-4 md:grid-rows-2">{photos.map((photo) => <div key={photo.src} className={`group relative overflow-hidden rounded-2xl ${photo.className}`}><Image src={photo.src} alt={photo.alt} fill className="object-cover transition duration-700 group-hover:scale-105" /><div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-950/80 to-transparent p-5 pt-14"><p className="text-sm font-medium text-white">{photo.label}</p></div></div>)}</div></div></section>
+      <section className="bg-cream-50 px-6 py-24 lg:px-10"><div className="mx-auto max-w-7xl"><div className="mb-10 flex items-end justify-between"><div><p className="eyebrow">A glimpse inside</p><h2 className="section-title mt-4">The little details<br /><span className="text-forest-700">matter.</span></h2></div><span className="hidden text-sm text-ink-400 sm:block">01 — 04</span></div><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">{photos.map((photo) => <div key={photo.src} className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-sage-50"><Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition duration-700 group-hover:scale-105" /><div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-950/80 to-transparent p-5 pt-14"><p className="text-sm font-medium text-white">{photo.label}</p></div></div>)}</div></div></section>
 
       <section className="bg-white px-6 py-24 lg:px-10"><div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center"><div><p className="eyebrow">Find your way here</p><h2 className="section-title mt-4">Close to what<br /><span className="text-forest-700">matters.</span></h2><p className="mt-6 max-w-md leading-7 text-ink-500">Easy to reach, easy to settle into. Send us a message for directions, local recommendations, and everything you need before arrival.</p><div className="mt-8 flex flex-wrap gap-3 text-sm text-ink-600"><span className="rounded-full bg-cream-100 px-4 py-2"><MapPin size={14} className="mr-2 inline text-gold-600" />Location details on request</span></div></div><div className="relative flex min-h-[300px] items-center justify-center overflow-hidden rounded-2xl bg-[#dce5dc] p-8"><div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(#7c9983 1px, transparent 1px), linear-gradient(90deg, #7c9983 1px, transparent 1px)', backgroundSize: '42px 42px' }} /><div className="relative z-10 grid h-20 w-20 place-items-center rounded-full border-8 border-white/70 bg-gold-300 text-forest-950 shadow-xl"><MapPin size={27} fill="currentColor" /></div><div className="absolute bottom-6 left-6 rounded-xl bg-white/90 px-4 py-3 shadow-sm"><p className="text-xs font-bold uppercase tracking-widest text-forest-900">Mums Backpackers</p><p className="mt-1 text-xs text-ink-500">Your next stop</p></div></div></div></section>
 

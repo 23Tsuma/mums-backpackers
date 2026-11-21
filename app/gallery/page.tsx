@@ -6,6 +6,8 @@ import PhotoGallery from '@/components/photo-gallery';
 export const metadata: Metadata = {
   title: 'Gallery | Mums Backpackers',
   description: 'Explore the rooms, kitchen, balcony, and welcoming spaces at Mums Backpackers.',
+  alternates: { canonical: '/gallery' },
+  openGraph: { url: '/gallery' },
 };
 
 export default function GalleryPage() {

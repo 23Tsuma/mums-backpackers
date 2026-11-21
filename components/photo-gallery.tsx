@@ -47,6 +47,12 @@ const photos = [
     title: 'Rest easy',
     category: 'Rooms',
   },
+  {
+    src: '/images/mums-backpackers-exterior.jpg',
+    alt: 'Mums Backpackers exterior surrounded by tropical greenery',
+    title: 'Welcome to Mums Backpackers',
+    category: 'The property',
+  },
 ];
 
 export default function PhotoGallery() {

@@ -7,7 +7,9 @@ The local development database uses XAMPP MariaDB and `utf8mb4`. The current wor
 1. Start MySQL in the XAMPP Control Panel.
 2. In phpMyAdmin, create `mumsbackpackers_db` with `utf8mb4_unicode_ci`.
 3. Import [001_create_booking_requests.sql](./migrations/001_create_booking_requests.sql), [002_apartment_inventory.sql](./migrations/002_apartment_inventory.sql), [003_admin_authentication.sql](./migrations/003_admin_authentication.sql), and [004_admin_property_management.sql](./migrations/004_admin_property_management.sql), in order. Apply each migration once.
-4. Configure the `DB_*` values from `.env.example` in `.env.local`. Keep credentials out of source control. For hosting, use that environment's connection details and TLS settings instead of the local values.
+4. Configure the `DB_*` values from `.env.example` in `.env.local`. Set `NEXT_PUBLIC_SITE_URL` to the exact public website origin used by your deployment so canonical metadata and the sitemap point at the right domain. Keep credentials out of source control. For hosting, use that environment's connection details and TLS settings instead of the local values.
+
+The public website publishes `/robots.txt` and `/sitemap.xml` for search crawlers. Submit the production sitemap URL in Google Search Console after deployment; crawler access does not guarantee indexing.
 
 `002_apartment_inventory.sql` creates the two apartment units, adds adult/child/extra-bed fields to `booking_requests`, and installs database triggers for confirmation rules. Pending requests do not hold availability; only confirmed bookings block the selected apartment for overlapping dates.
 
