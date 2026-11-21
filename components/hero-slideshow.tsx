@@ -20,16 +20,6 @@ const slides = [
     alt: 'A furnished bedroom prepared for a restful stay',
     label: 'Rest easy',
   },
-  {
-    src: '/images/gallery-kitchen.jpg',
-    alt: 'Furnished kitchen with dishes, counter space, and garden views',
-    label: 'Everyday comforts',
-  },
-  {
-    src: '/images/mums-backpackers-exterior.jpg',
-    alt: 'Mums Backpackers surrounded by tropical greenery',
-    label: 'Welcome to Mums Backpackers',
-  },
 ];
 
 export default function HeroSlideshow() {
@@ -64,7 +54,7 @@ export default function HeroSlideshow() {
           priority={index === 0}
           sizes="100vw"
           aria-hidden={index !== activeSlide}
-          className={`object-cover object-center transition-opacity duration-1000 ${index === activeSlide ? 'opacity-60' : 'opacity-0'}`}
+          className={`object-cover object-center transition-opacity duration-1000 ${index === activeSlide ? 'opacity-80' : 'opacity-0'}`}
         />
       ))}
       <div className="absolute bottom-7 right-6 z-10 flex items-center gap-2 sm:right-10">

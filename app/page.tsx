@@ -54,9 +54,15 @@ const features = [
 export default function Home() {
   return (
     <main>
-      <section className="relative min-h-[720px] overflow-hidden bg-forest-950 text-white">
+      <section className="relative min-h-[720px] overflow-hidden bg-[#252524] text-white">
         <HeroSlideshow />
-        <div className="absolute inset-0 bg-gradient-to-r from-forest-950 via-forest-950/70 to-forest-950/20" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(90deg, rgba(31, 31, 30, 0.84) 0%, rgba(57, 56, 53, 0.52) 54%, rgba(114, 108, 96, 0.12) 100%)',
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -96,7 +102,7 @@ export default function Home() {
             <div className="max-w-2xl animate-fade-up">
               <p className="mb-6 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em] text-gold-200"><span className="h-px w-9 bg-gold-300" />Your stay, made warm</p>
               <h1 className="max-w-3xl font-display text-6xl leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">Welcome to <em className="font-display text-gold-200">Mums</em> Backpackers.</h1>
-              <p className="mt-7 max-w-lg text-lg leading-8 text-white/80">Your comfort, your stay, your experience. A relaxed, welcoming base for travellers looking to feel at home while discovering more.</p>
+              <p className="mt-7 max-w-lg text-lg leading-8 text-white/80">Discover a place that feels like home.</p>
               <div className="mt-10 flex flex-wrap items-center gap-4">
                 <Link href="/booking" className="group inline-flex items-center gap-3 rounded-full bg-gold-300 px-7 py-4 text-sm font-bold text-forest-950 transition-all hover:-translate-y-1 hover:bg-gold-200">Book your stay <ArrowUpRight size={17} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></Link>
                 <a href="#stay" className="rounded-full border border-white/30 px-7 py-4 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10">Explore the space</a>
@@ -128,7 +134,7 @@ export default function Home() {
 
       <section className="bg-cream-50 px-6 py-24 lg:px-10"><div className="mx-auto max-w-7xl"><div className="mb-10 flex items-end justify-between"><div><p className="eyebrow">A glimpse inside</p><h2 className="section-title mt-4">The little details<br /><span className="text-forest-700">matter.</span></h2></div><span className="hidden text-sm text-ink-400 sm:block">01 — 04</span></div><div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">{photos.map((photo) => <div key={photo.src} className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-sage-50"><Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition duration-700 group-hover:scale-105" /><div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-950/80 to-transparent p-5 pt-14"><p className="text-sm font-medium text-white">{photo.label}</p></div></div>)}</div></div></section>
 
-      <section className="bg-white px-6 py-24 lg:px-10"><div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center"><div><p className="eyebrow">Find your way here</p><h2 className="section-title mt-4">Close to what<br /><span className="text-forest-700">matters.</span></h2><p className="mt-6 max-w-md leading-7 text-ink-500">Easy to reach, easy to settle into. Send us a message for directions, local recommendations, and everything you need before arrival.</p><div className="mt-8 flex flex-wrap gap-3 text-sm text-ink-600"><span className="rounded-full bg-cream-100 px-4 py-2"><MapPin size={14} className="mr-2 inline text-gold-600" />Location details on request</span></div></div><div className="relative flex min-h-[300px] items-center justify-center overflow-hidden rounded-2xl bg-[#dce5dc] p-8"><div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(#7c9983 1px, transparent 1px), linear-gradient(90deg, #7c9983 1px, transparent 1px)', backgroundSize: '42px 42px' }} /><div className="relative z-10 grid h-20 w-20 place-items-center rounded-full border-8 border-white/70 bg-gold-300 text-forest-950 shadow-xl"><MapPin size={27} fill="currentColor" /></div><div className="absolute bottom-6 left-6 rounded-xl bg-white/90 px-4 py-3 shadow-sm"><p className="text-xs font-bold uppercase tracking-widest text-forest-900">Mums Backpackers</p><p className="mt-1 text-xs text-ink-500">Your next stop</p></div></div></div></section>
+      <section className="bg-white px-6 py-24 lg:px-10"><div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center"><div><p className="eyebrow">Find your way here</p><h2 className="section-title mt-4">Close to what<br /><span className="text-forest-700">matters.</span></h2><p className="mt-6 max-w-md leading-7 text-ink-500">Easy to reach, easy to settle into. Send us a message for directions, local recommendations, and everything you need before arrival.</p><div className="mt-8 flex flex-wrap gap-3 text-sm text-ink-600"><span className="rounded-full bg-cream-100 px-4 py-2"><MapPin size={14} className="mr-2 inline text-gold-600" />Location details on request</span></div></div><div className="relative flex min-h-[300px] items-center justify-center overflow-hidden rounded-2xl bg-[#e8e5df] p-8"><div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(#b8b2a7 1px, transparent 1px), linear-gradient(90deg, #b8b2a7 1px, transparent 1px)', backgroundSize: '42px 42px' }} /><div className="relative z-10 grid h-20 w-20 place-items-center rounded-full border-8 border-white/70 bg-gold-300 text-forest-950 shadow-xl"><MapPin size={27} fill="currentColor" /></div><div className="absolute bottom-6 left-6 rounded-xl bg-white/90 px-4 py-3 shadow-sm"><p className="text-xs font-bold uppercase tracking-widest text-forest-900">Mums Backpackers</p><p className="mt-1 text-xs text-ink-500">Your next stop</p></div></div></div></section>
 
       <section className="bg-gold-300 px-6 py-16 lg:px-10"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row md:items-center"><div><p className="text-xs font-bold uppercase tracking-[0.25em] text-forest-800">Ready when you are</p><h2 className="mt-3 font-display text-4xl text-forest-950 sm:text-5xl">Make yourself at home.</h2></div><Link href="/booking" className="group inline-flex w-fit items-center gap-3 rounded-full bg-forest-950 px-7 py-4 text-sm font-bold text-white transition-all hover:-translate-y-1 hover:bg-forest-800">Book your stay <ArrowUpRight size={17} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></Link></div></section>
 
