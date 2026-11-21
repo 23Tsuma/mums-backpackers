@@ -87,7 +87,6 @@ export default function Home() {
               </span>
             </Link>
             <nav className="hidden items-center gap-9 text-sm font-medium md:flex">
-              <Link href="/" className="text-white transition-colors hover:text-gold-200">Home</Link>
               <Link href="/gallery" className="text-white/75 transition-colors hover:text-gold-200">Gallery</Link>
               <Link href="/booking" className="text-white/75 transition-colors hover:text-gold-200">Booking & Contact</Link>
             </nav>

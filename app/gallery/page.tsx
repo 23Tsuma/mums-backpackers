@@ -25,7 +25,6 @@ export default function GalleryPage() {
             </span>
           </Link>
           <nav className="flex items-center gap-6 text-sm">
-            <Link href="/" className="hidden text-ink-500 transition-colors hover:text-forest-800 sm:block">Home</Link>
             <Link href="/gallery" aria-current="page" className="font-semibold text-forest-900">Gallery</Link>
             <Link href="/booking" className="hidden text-ink-500 transition-colors hover:text-forest-800 sm:block">Booking & Contact</Link>
           </nav>
