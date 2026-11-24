@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import SiteNavigation from '@/components/site-navigation';
 
 const vehicles = [
   { name: '7L Van (Chauffeur Driven)', image: '/images/rentals/7l-van.png', type: 'Chauffeur-driven van', description: 'A comfortable option for airport transfers, group trips, and exploring the coast together.' },
@@ -127,12 +128,8 @@ export default function RentalSafariPage() {
             <span className="grid h-10 w-10 place-items-center rounded-full bg-forest-950 text-gold-200 transition-transform group-hover:rotate-12"><Sparkles size={17} /></span>
             <span><span className="block font-display text-xl leading-none text-forest-950">Mums</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.28em] text-gold-700">Backpackers</span></span>
           </Link>
-          <nav className="flex items-center gap-5 text-sm">
-            <Link href="/gallery" className="hidden text-ink-500 hover:text-forest-800 sm:block">Gallery</Link>
-            <Link href="/travel" aria-current="page" className="font-semibold text-forest-900">Travel desk</Link>
-            <Link href="/booking" className="hidden text-ink-500 hover:text-forest-800 sm:block">Booking & Contact</Link>
-          </nav>
-          <a href="#safari-enquiry" className="hidden items-center gap-2 rounded-full bg-forest-950 px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white hover:bg-forest-800 sm:inline-flex">Plan a trip <ArrowUpRight size={14} /></a>
+          <SiteNavigation currentPage="travel" />
+          <a href="#safari-enquiry" className="hidden items-center gap-2 rounded-full bg-forest-950 px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white hover:bg-forest-800 md:inline-flex">Plan a trip <ArrowUpRight size={14} /></a>
         </div>
       </header>
 

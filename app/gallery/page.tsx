@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowUpRight, Sparkles } from 'lucide-react';
 import PhotoGallery from '@/components/photo-gallery';
+import SiteNavigation from '@/components/site-navigation';
 
 export const metadata: Metadata = {
   title: 'Gallery | Mums Backpackers',
@@ -24,11 +25,8 @@ export default function GalleryPage() {
               <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.28em] text-gold-700">Backpackers</span>
             </span>
           </Link>
-          <nav className="flex items-center gap-6 text-sm">
-            <Link href="/gallery" aria-current="page" className="font-semibold text-forest-900">Gallery</Link>
-            <Link href="/booking" className="hidden text-ink-500 transition-colors hover:text-forest-800 sm:block">Booking & Contact</Link>
-          </nav>
-          <Link href="/booking" className="hidden items-center gap-2 rounded-full bg-forest-950 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-forest-800 sm:inline-flex">
+          <SiteNavigation currentPage="gallery" />
+          <Link href="/booking" className="hidden items-center gap-2 rounded-full bg-forest-950 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-forest-800 md:inline-flex">
             Enquire now <ArrowUpRight size={15} />
           </Link>
         </div>

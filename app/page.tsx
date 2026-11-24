@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import PublicProperties from '@/components/public-properties';
 import HeroSlideshow from '@/components/hero-slideshow';
+import SiteNavigation from '@/components/site-navigation';
 import { SITE_URL } from '@/lib/site-url';
 import {
   ArrowUpRight,
@@ -110,12 +111,8 @@ export default function Home() {
                 <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.28em] text-gold-200">Backpackers</span>
               </span>
             </Link>
-            <nav className="hidden items-center gap-9 text-sm font-medium md:flex">
-              <Link href="/gallery" className="text-white/75 transition-colors hover:text-gold-200">Gallery</Link>
-              <Link href="/travel" className="text-white/75 transition-colors hover:text-gold-200">Car rental & safaris</Link>
-              <Link href="/booking" className="text-white/75 transition-colors hover:text-gold-200">Booking & Contact</Link>
-            </nav>
-            <Link href="/booking" className="rounded-full border border-gold-200/70 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.16em] text-gold-100 transition-all hover:bg-gold-200 hover:text-forest-950">Enquire now</Link>
+            <SiteNavigation currentPage="home" variant="dark" />
+            <Link href="/booking" className="hidden rounded-full border border-gold-200/70 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.16em] text-gold-100 transition-all hover:bg-gold-200 hover:text-forest-950 md:inline-flex">Enquire now</Link>
           </header>
           <div className="flex flex-1 items-center pb-20 pt-24">
             <div className="max-w-2xl animate-fade-up">
