@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Booking & Contact | Mums Backpackers',
-  description: 'Enquire about a stay at Mums Backpackers, check apartment availability, and contact our team directly.',
+  title: 'Book Accommodation in Diani Beach | Mums Backpackers',
+  description: 'Check availability and enquire about furnished accommodation in Diani Beach, Kenya. Contact Mums Backpackers directly to plan your stay.',
   alternates: { canonical: '/booking' },
   openGraph: {
-    title: 'Booking & Contact | Mums Backpackers',
-    description: 'Enquire about a stay at Mums Backpackers and contact our team directly.',
+    title: 'Book Accommodation in Diani Beach | Mums Backpackers',
+    description: 'Check availability and enquire about furnished accommodation in Diani Beach, Kenya.',
     url: '/booking',
   },
 };

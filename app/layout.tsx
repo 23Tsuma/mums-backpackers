@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/site-url';
 
 export const metadata: Metadata = {
-  title: 'Mums Backpackers | Your comfort, your stay, your experience',
+  title: 'Mums Backpackers | Accommodation in Diani Beach, Kenya',
   metadataBase: SITE_URL,
-  description: 'Discover comfortable, furnished stays at Mums Backpackers. Explore our rooms and shared spaces, then enquire directly about your visit.',
+  description: 'Find furnished accommodation in Diani Beach, Kenya at Mums Backpackers. Explore our rooms and shared spaces, check availability, and enquire directly.',
   applicationName: 'Mums Backpackers',
   keywords: [
     'Mums Backpackers',
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'Mums Backpackers',
-    title: 'Mums Backpackers | Comfortable, furnished stays',
-    description: 'Explore the furnished rooms and welcoming spaces at Mums Backpackers.',
+    title: 'Accommodation in Diani Beach | Mums Backpackers',
+    description: 'Explore furnished rooms and welcoming spaces at Mums Backpackers in Diani Beach, Kenya.',
     images: [
       {
         url: '/images/gallery-lounge.jpg',
@@ -46,8 +46,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mums Backpackers | Comfortable, furnished stays',
-    description: 'Explore the furnished rooms and welcoming spaces at Mums Backpackers.',
+    title: 'Accommodation in Diani Beach | Mums Backpackers',
+    description: 'Explore furnished rooms and welcoming spaces at Mums Backpackers in Diani Beach, Kenya.',
     images: ['/images/gallery-lounge.jpg'],
   },
 };
