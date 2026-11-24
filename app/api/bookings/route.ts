@@ -119,7 +119,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
     }
     if (error instanceof BookingUnavailableError) {
-      return NextResponse.json({ error: 'That apartment is no longer available for the selected dates. Please choose another apartment or dates.' }, { status: 409 });
+      return NextResponse.json({
+        error: 'We are temporarily fully booked for those dates. Please choose different dates.',
+      }, { status: 409 });
     }
 
     const code = error instanceof Error && 'code' in error ? String(error.code) : 'UnknownError';

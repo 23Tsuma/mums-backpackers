@@ -141,6 +141,48 @@ function emailShell(title: string, content: string): string {
 </html>`;
 }
 
+export interface ConfirmedEnquiryEmail {
+  id: string;
+  name: string;
+  email: string;
+  category: 'Room booking' | 'Vehicle rental' | 'Safari';
+  details: Array<[string, string]>;
+}
+
+export async function sendConfirmedEnquiryEmail(enquiry: ConfirmedEnquiryEmail): Promise<void> {
+  const rows = enquiry.details.map(([label, value]) => `<tr>
+      <th align="left" style="padding:12px 14px;border-bottom:1px solid #e6ece7;color:#526258;font-size:13px;font-weight:600">${escapeHtml(label)}</th>
+      <td align="left" style="padding:12px 14px;border-bottom:1px solid #e6ece7;color:#17241b;font-size:14px">${escapeHtml(value)}</td>
+    </tr>`).join('');
+  const detailsTableHtml = `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse">${rows}</table>`;
+  const content = `<p style="margin:0 0 16px">Hello ${escapeHtml(enquiry.name)},</p>
+    <p style="margin:0 0 20px">Your ${escapeHtml(enquiry.category.toLowerCase())} has been confirmed. We look forward to welcoming you.</p>
+    <h2 style="margin:24px 0 10px;color:#122d20;font-family:Georgia,serif;font-size:20px">Confirmation details</h2>
+    ${detailsTableHtml}
+    <p style="margin:20px 0 0">If you have questions, reply to this email or contact <a href="mailto:${ADMIN_EMAIL}" style="color:#25543a">${ADMIN_EMAIL}</a>.</p>`;
+  const text = [
+    `Hello ${enquiry.name},`,
+    '',
+    `Your ${enquiry.category.toLowerCase()} has been confirmed. We look forward to welcoming you.`,
+    '',
+    ...enquiry.details.map(([label, value]) => `${label}: ${value}`),
+    '',
+    `Questions? Contact ${ADMIN_EMAIL}.`,
+  ].join('\n');
+
+  await getTransporter().sendMail({
+    from: {
+      name: process.env.SMTP_FROM_NAME?.trim() ?? '',
+      address: process.env.SMTP_FROM_EMAIL?.trim() ?? '',
+    },
+    to: enquiry.email,
+    messageId: `<confirmation-${enquiry.id}@gmail.com>`,
+    subject: `Confirmed · ${enquiry.category} · Mums Backpackers`,
+    html: emailShell('Your booking is confirmed', content),
+    text,
+  });
+}
+
 function customerEmail(booking: BookingRecord) {
   const childReview = booking.children && booking.children > 0
     ? ' Your request for children and additional sleeping arrangements is subject to administrator approval.'

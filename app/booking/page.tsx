@@ -37,10 +37,26 @@ export default function BookingPage() {
   const [extraBeds, setExtraBeds] = useState(0);
   const idempotencyKey = useRef<string | null>(null);
 
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const firstAllowedCheckout = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const checkoutMinimum = checkin && checkin >= today
+    ? new Date(`${checkin}T00:00:00`)
+    : new Date(firstAllowedCheckout);
+  if (checkin && checkin >= today) checkoutMinimum.setDate(checkoutMinimum.getDate() + 1);
+  const checkoutMin = `${checkoutMinimum.getFullYear()}-${String(checkoutMinimum.getMonth() + 1).padStart(2, '0')}-${String(checkoutMinimum.getDate()).padStart(2, '0')}`;
+
   useEffect(() => {
     if (!checkin || !checkout || checkout <= checkin) {
       setApartments([]);
-      setAvailabilityMessage('');
+      setAvailabilityMessage(checkin && checkin < today ? 'Check-in date cannot be in the past.' : '');
+      setAvailabilityLoading(false);
+      return;
+    }
+    if (checkin < today || checkout < today) {
+      setApartments([]);
+      setUnitId(null);
+      setAvailabilityMessage('Please choose dates that are today or later.');
       setAvailabilityLoading(false);
       return;
     }
@@ -60,9 +76,6 @@ export default function BookingPage() {
         const options = result.apartments ?? [];
         setApartments(options);
         setUnitId((current) => options.some((apartment) => apartment.id === current && apartment.available) ? current : null);
-        if (!options.some((apartment) => apartment.available)) {
-          setAvailabilityMessage('Neither apartment is available for those dates.');
-        }
       })
       .catch((requestError: unknown) => {
         if (!active || (requestError instanceof Error && requestError.name === 'AbortError')) return;
@@ -77,7 +90,7 @@ export default function BookingPage() {
       active = false;
       controller.abort();
     };
-  }, [checkin, checkout]);
+  }, [checkin, checkout, today]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -86,15 +99,14 @@ export default function BookingPage() {
     const checkoutInput = form.querySelector<HTMLInputElement>('input[name="checkout"]');
     const childrenInput = form.querySelector<HTMLInputElement>('input[name="children"]');
     const extraBedsInput = form.querySelector<HTMLInputElement>('input[name="extraBeds"]');
-    const now = new Date();
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-
     checkinInput?.setCustomValidity('');
     checkoutInput?.setCustomValidity('');
     extraBedsInput?.setCustomValidity('');
 
     if (checkinInput?.value && checkinInput.value < today) {
       checkinInput.setCustomValidity('Check-in date cannot be in the past.');
+    } else if (checkoutInput?.value && checkoutInput.value < today) {
+      checkoutInput.setCustomValidity('Check-out date cannot be in the past.');
     } else if (checkinInput?.value && checkoutInput?.value && checkoutInput.value <= checkinInput.value) {
       checkoutInput.setCustomValidity('Check-out date must be after the check-in date.');
     }
@@ -165,7 +177,7 @@ export default function BookingPage() {
 
   return (
     <main className="min-h-screen bg-cream-50 text-ink-900">
-      <header className="border-b border-sage-200 bg-cream-50/95 px-6 lg:px-10"><div className="mx-auto flex max-w-7xl items-center justify-between py-5"><Link href="/" className="group flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full bg-forest-950 text-gold-200 transition-transform group-hover:rotate-12"><Sparkles size={17} /></span><span><span className="block font-display text-xl leading-none text-forest-950">Mums</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.28em] text-gold-700">Backpackers</span></span></Link><nav className="flex items-center gap-6 text-sm"><Link href="/gallery" className="hidden text-ink-500 transition-colors hover:text-forest-800 sm:block">Gallery</Link><Link href="/booking" className="font-semibold text-forest-900">Booking & Contact</Link></nav></div></header>
+      <header className="border-b border-sage-200 bg-cream-50/95 px-6 lg:px-10"><div className="mx-auto flex max-w-7xl items-center justify-between py-5"><Link href="/" className="group flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full bg-forest-950 text-gold-200 transition-transform group-hover:rotate-12"><Sparkles size={17} /></span><span><span className="block font-display text-xl leading-none text-forest-950">Mums</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.28em] text-gold-700">Backpackers</span></span></Link><nav className="flex items-center gap-6 text-sm"><Link href="/gallery" className="hidden text-ink-500 transition-colors hover:text-forest-800 sm:block">Gallery</Link><Link href="/travel" className="hidden text-ink-500 transition-colors hover:text-forest-800 sm:block">Car rental & safaris</Link><Link href="/booking" className="font-semibold text-forest-900">Booking & Contact</Link></nav></div></header>
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24"><Link href="/" className="mb-10 inline-flex items-center gap-2 text-sm font-semibold text-forest-700 transition-colors hover:text-gold-700"><ArrowLeft size={16} /> Back to home</Link><div className="grid gap-14 lg:grid-cols-[1fr_0.7fr] lg:gap-24"><div><p className="eyebrow">Start your stay</p><h1 className="mt-5 max-w-2xl font-display text-5xl leading-[1.05] text-forest-950 sm:text-6xl">Book your stay at <em className="text-forest-700">Mums</em> Backpackers.</h1><p className="mt-7 max-w-xl text-lg leading-8 text-ink-600">Tell us a little about your plans and we&apos;ll get back to you with availability and next steps.</p><div className="mt-10 flex flex-wrap gap-3 text-sm text-ink-600"><span className="rounded-full bg-white px-4 py-2 shadow-sm"><CheckCircle2 size={15} className="mr-2 inline text-forest-700" />Warm, simple stays</span><span className="rounded-full bg-white px-4 py-2 shadow-sm"><CheckCircle2 size={15} className="mr-2 inline text-forest-700" />Personal response</span></div></div><aside className="rounded-2xl bg-forest-950 p-8 text-white shadow-xl sm:p-10"><p className="eyebrow text-gold-200">Get in touch</p><h2 className="mt-4 font-display text-3xl">Questions before you arrive?</h2><p className="mt-4 text-sm leading-6 text-white/60">We&apos;re happy to help with directions, room details, or local recommendations.</p><div className="mt-8 space-y-5 border-t border-white/15 pt-7"><a href="mailto:info@mumsbackpackers.com" className="flex items-center gap-3 text-sm text-white/80 transition-colors hover:text-gold-200"><Mail size={18} className="text-gold-200" /> info@mumsbackpackers.com</a><a href="tel:+25427863245" className="flex items-center gap-3 text-sm text-white/80 transition-colors hover:text-gold-200"><Phone size={18} className="text-gold-200" /> 0727863245</a><div className="flex items-center gap-3 text-sm text-white/80"><MapPin size={18} className="text-gold-200" /> Location details on request</div></div><a href="https://wa.me/25427863245" className="mt-9 flex items-center justify-center gap-2 rounded-full bg-gold-300 px-5 py-3.5 text-sm font-bold text-forest-950 transition-colors hover:bg-gold-200"><MessageCircle size={18} /> Message us on WhatsApp <ArrowUpRight size={15} /></a></aside></div>
 
         <section className="mt-20 max-w-4xl rounded-2xl bg-white p-6 shadow-[0_12px_50px_rgba(26,61,42,0.07)] sm:p-10 lg:mt-28">
@@ -199,8 +211,8 @@ export default function BookingPage() {
                 <label className="field-label">Adults *<select name="adults" required value={adults} onChange={(event) => setAdults(Number(event.target.value))} className="field-input"><option value={1}>1 adult</option><option value={2}>2 adults</option></select></label>
                 <label className="field-label">Children *<input name="children" required type="number" min={0} max={3} value={children} onChange={(event) => { const count = Number(event.target.value); setChildren(count); if (count === 0) setExtraBeds(0); }} className="field-input" /><span className="mt-1 block text-xs text-ink-400">Up to 3 children; sleeping arrangements require approval.</span></label>
                 <label className="field-label">Additional beds requested{children > 0 ? ' *' : ''}<input name="extraBeds" required={children > 0} type="number" min={children > 0 ? 1 : 0} max={children > 0 ? 3 : 0} value={extraBeds} onChange={(event) => setExtraBeds(Number(event.target.value))} className="field-input" /><span className="mt-1 block text-xs text-ink-400">Availability is subject to prior approval.</span></label>
-                <label className="field-label">Check-in date *<input name="checkin" required type="date" value={checkin} onChange={(event) => { setCheckin(event.target.value); setUnitId(null); }} className="field-input" /></label>
-                <label className="field-label">Check-out date *<input name="checkout" required type="date" value={checkout} onChange={(event) => { setCheckout(event.target.value); setUnitId(null); }} className="field-input" /></label>
+                <label className="field-label">Check-in date *<input name="checkin" required type="date" min={today} value={checkin} onChange={(event) => { setCheckin(event.target.value); if (checkout && checkout <= event.target.value) setCheckout(''); setUnitId(null); }} className="field-input" /></label>
+                <label className="field-label">Check-out date *<input name="checkout" required type="date" min={checkoutMin} value={checkout} onChange={(event) => { setCheckout(event.target.value); setUnitId(null); }} className="field-input" /></label>
               </div>
               <fieldset className="space-y-3" disabled={availabilityLoading}>
                 <legend className="field-label">Choose an apartment *</legend>

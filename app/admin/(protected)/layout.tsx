@@ -30,16 +30,10 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
         <nav aria-label="Admin navigation" className="mt-8 flex gap-2 overflow-x-auto md:flex-col">
           <Link href="/admin" className="inline-flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-forest-950 transition-colors hover:bg-sage-50"><LayoutDashboard size={17} /> Dashboard</Link>
           <Link href="/admin/properties" className="inline-flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-forest-950 transition-colors hover:bg-sage-50"><BedDouble size={17} /> Properties</Link>
-          {[
-            { label: 'Booking Management', icon: ClipboardList },
-            { label: 'Booking Calendar', icon: CalendarDays },
-            { label: 'Customers', icon: Users },
-            { label: 'Email Notifications', icon: MailCheck },
-          ].map(({ label, icon: Icon }) => (
-            <span key={label} aria-disabled="true" title="Available in the next implementation stage" className="inline-flex shrink-0 cursor-not-allowed items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-ink-300">
-              <Icon size={17} /> {label}<span className="ml-auto hidden text-[9px] uppercase tracking-wide md:inline">Later</span>
-            </span>
-          ))}
+          <Link href="/admin/bookings" className="inline-flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-forest-950 transition-colors hover:bg-sage-50"><ClipboardList size={17} /> Booking Management</Link>
+          <Link href="/admin/calendar" className="inline-flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-forest-950 transition-colors hover:bg-sage-50"><CalendarDays size={17} /> Booking Calendar</Link>
+          <Link href="/admin/customers" className="inline-flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-forest-950 transition-colors hover:bg-sage-50"><Users size={17} /> Customers</Link>
+          <Link href="/admin/notifications" className="inline-flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-forest-950 transition-colors hover:bg-sage-50"><MailCheck size={17} /> Email Notifications</Link>
           <Link href="/admin/settings" className="inline-flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-forest-950 transition-colors hover:bg-sage-50"><Settings size={17} /> Settings</Link>
         </nav>
         <div className="mt-8 hidden border-t border-sage-100 pt-6 md:block">

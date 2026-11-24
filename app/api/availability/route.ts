@@ -28,6 +28,11 @@ export async function GET(request: Request) {
 
   try {
     const apartments = await getApartmentAvailability(checkin.data, checkout.data);
+    if (!apartments.some((apartment) => Boolean(apartment.available))) {
+      return NextResponse.json({
+        error: 'We are temporarily fully booked for those dates. Please choose different dates.',
+      }, { status: 409 });
+    }
     return NextResponse.json({
       apartments: apartments.map((apartment) => ({
         id: apartment.id,
